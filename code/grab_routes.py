@@ -9,11 +9,11 @@ from config import *
 # This script builds a JSON file containing a transit systems 
 # routes coupled with census data. Uses GTFS feeds and the census API.
 
-census_api = census.Census(CENSUS_API_KEY, year=2010)
+census_api = census.Census(CENSUS_API_KEY, year=2000)
 
 # Helper to call an FCC API to grab the correct census tract for a given lat/lon.
 def get_fips(latitude, longitude):
-	r = requests.get("http://data.fcc.gov/api/block/find?format=json&latitude=%f&longitude=%f&showall=true" % (latitude, longitude))
+	r = requests.get("http://data.fcc.gov/api/block/2000/find?format=json&latitude=%f&longitude=%f&showall=true" % (latitude, longitude))
 	return r.json()
 
 
@@ -74,8 +74,8 @@ for agency_name, path in ALL_GTFS_PATHS.iteritems():
 			tract_fips = block_fips[5:11] # Block is too specific to have demographic info
 
 			# Look up census info
-			response = census_api.acs.state_county_tract(MEDIAN_INCOME_TABLE_NAME, state_fips, county_fips, tract_fips)
-			median_income = response[0][MEDIAN_INCOME_TABLE_NAME]
+			response = census_api.sf3.state_county_tract("P053001", state_fips, county_fips, tract_fips)
+			median_income = response[0]["P053001"]
 			median_income = int(median_income) if (median_income and median_income != 'null') else None
 
 			stop_json = {"lat":s.stop_lat, "lon":s.stop_lon, "name":s.stop_name, "state_fips":state_fips, "county_fips":county_fips, "tract_fips":tract_fips, "median_income":median_income}

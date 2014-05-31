@@ -3,9 +3,10 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_DIR = SCRIPT_DIR+"/../output"
 
-ALL_GTFS_PATHS = {"BART": SCRIPT_DIR+"/../data/bart",
-			 	 "CalTrain": SCRIPT_DIR+"/../data/caltrain",
-			 	 "MUNI": SCRIPT_DIR+"/../data/muni"}
+ALL_GTFS_PATHS = {"BART": SCRIPT_DIR+"/../data/bart"#,
+			 	 #"CalTrain": SCRIPT_DIR+"/../data/caltrain",
+			 	 #"MUNI": SCRIPT_DIR+"/../data/muni"
+         }
 
 # Census
 CENSUS_API_KEY = "4b415bf262765d14f4c2f534ce3b5f0a4237d980"
