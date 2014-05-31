@@ -12,8 +12,8 @@ from config import *
 census_api = census.Census(CENSUS_API_KEY, year=2000)
 
 # Helper to call an FCC API to grab the correct census tract for a given lat/lon.
-def get_fips(latitude, longitude):
-	r = requests.get("http://data.fcc.gov/api/block/2000/find?format=json&latitude=%f&longitude=%f&showall=true" % (latitude, longitude))
+def get_fips(latitude, longitude, year="2010"):
+	r = requests.get("http://data.fcc.gov/api/block/%s/find?format=json&latitude=%f&longitude=%f&showall=true" % (year, latitude, longitude))
 	return r.json()
 
 
@@ -67,18 +67,44 @@ for agency_name, path in ALL_GTFS_PATHS.iteritems():
 
 		# Get FIPS info from the FCC API, separate it out
 		try:
-			fips_info = get_fips(s.stop_lat, s.stop_lon)
-			state_fips = fips_info['State']['FIPS']
-			county_fips = fips_info['County']['FIPS'][2:5]
-			block_fips = fips_info['Block']['FIPS']
-			tract_fips = block_fips[5:11] # Block is too specific to have demographic info
+			year = "2000"
+			stop_json = {
+				"lat":s.stop_lat, 
+				"lon":s.stop_lon, 
+				"name":s.stop_name,
+				"median_income": {},
+				"fips_info": {}
+				}
 
-			# Look up census info
-			response = census_api.sf3.state_county_tract("P053001", state_fips, county_fips, tract_fips)
-			median_income = response[0]["P053001"]
-			median_income = int(median_income) if (median_income and median_income != 'null') else None
+			for year in ["2000", "2010"]:
+				fips_info = get_fips(s.stop_lat, s.stop_lon, year=year)
+				print fips_info
+				state_fips = fips_info['State']['FIPS']
+				county_fips = fips_info['County']['FIPS'][2:5]
+				block_fips = fips_info['Block']['FIPS']
+				tract_fips = block_fips[5:11] # Block is too specific to have demographic info
 
-			stop_json = {"lat":s.stop_lat, "lon":s.stop_lon, "name":s.stop_name, "state_fips":state_fips, "county_fips":county_fips, "tract_fips":tract_fips, "median_income":median_income}
+				stop_json["fips_info"][year] = {
+					"state_fips": state_fips,
+					"county_fips": county_fips, 
+					"tract_fips": tract_fips
+				}
+
+				# Look up census info
+				median_income_table_name = MEDIAN_INCOME_TABLE_NAMES[year]
+
+				# We need to use ACS for 2010 since Census API doesn't have it for SF3
+				if year != "2010":
+					response = census_api.sf3.state_county_tract(median_income_table_name, state_fips, county_fips, tract_fips, year=year)
+				else:
+					response = census_api.acs.state_county_tract(median_income_table_name, state_fips, county_fips, tract_fips, year=year)
+
+				median_income = response[0][median_income_table_name]
+				median_income = int(median_income) if (median_income and median_income != 'null') else None
+
+				stop_json["median_income"][year] = median_income
+#				stop_json = {"lat":s.stop_lat, "lon":s.stop_lon, "name":s.stop_name, "state_fips":state_fips, "county_fips":county_fips, "tract_fips":tract_fips, "median_income":median_income}
+
 			agency_json["stops"][s.stop_id] = stop_json
 
 			if median_income: 
@@ -86,6 +112,7 @@ for agency_name, path in ALL_GTFS_PATHS.iteritems():
 
 		except Exception, e:
 			print "Skipping stop due to exception: %s" % e
+			raise e
 
 	# Output as JSON
 	print "Writing..."
