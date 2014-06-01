@@ -1,4 +1,22 @@
-body {
+body {font-family: 'Open Sans', sans-serif; color: #999;}
+h1 small, h2 {color: #1fbba6;
+    font-family: 'Montserrat',sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;}
+h2 {margin-top: 30px; font-size:16px;}
+p {color: #444;}
+a {color: #1fbba6;}
+a:hover, a:focus {color: #178778;}
+.page-header {border-bottom: none;}
+.btn-primary {
+    background-color: #1fbba6;
+    border-color: #1ba18f;}
+.select {
+   background: url(new_arrow.png) no-repeat right #fff;
+}
+
+/*body {
     padding: 15px;
     background: #fff;
     margin-bottom: 40px;
