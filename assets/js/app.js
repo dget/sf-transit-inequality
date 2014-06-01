@@ -19,6 +19,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             if (numberAgenciesLoaded === DATA_SOURCES.length) {
                 $scope.agencies = agencyData;
                 $scope.$apply();
+                $scope.displayRoute('BART', '01');
             }
         });
     });
@@ -230,4 +231,10 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         .attr("stroke", colors[0]);
 
     };
+
+    $scope.init = function() {
+
+    }
+
+    window.setTimeout(function() {$scope.displayRoute('BART', '01');}, 1000);
 }]);

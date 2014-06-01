@@ -18,7 +18,7 @@
     
 <!-- New Layout --> 
     
-    <div class="container" data-ng-controller="AppCtrl">
+    <div class="container" data-ng-controller="AppCtrl" data-ng-init="init()">
         <div class="page-header">
             <h1>Changes in Bay Area Income <small>1990–2010 </small></h1>
         </div>
@@ -91,7 +91,7 @@
         </form>-->
         <h2>Key</h2>
         <div id="graph" class="well">
-          <div id="instructions"><p>Graph Placeholder</p></div>
+          <div id="instructions"><p></p></div>
         </div>
         <h2>About</h2>
         <p>Source: US Census 1990, 2000, 2010. Adjusted for inflation using this formula for Consumer Price Index: 2014 Wages = 2000 Wages x (2014 CPI-U / 2000 CPI-U).</p>
