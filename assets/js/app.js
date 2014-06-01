@@ -23,6 +23,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         });
     });
 
+
     // Load and show the map of CA
     d3.json("data/ca-topo.json", function (error, ca_topojson){
         map_data = ca_topojson;
@@ -66,8 +67,8 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         });
 
         // dimensions
-        var w = 580,
-            h = 260,
+        var w = 780,
+            h = 360,
             hMargin = 65,
             vMargin = 20,
             dotRadius = 3,
