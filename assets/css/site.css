@@ -17,3 +17,34 @@ a:hover, a:focus {color: #178778;}
 .btn-primary {background-color: #1fbba6;border-color: #1ba18f;}
 
 .select {background: url(new_arrow.png) no-repeat right #fff;}
+
+#tooltip {
+    border: #ccc 1px solid;
+    position: fixed;
+    visibility: hidden;
+    border-radius: 4px;
+    padding: 4px;
+    background: white;
+    box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+    z-index: 10;
+    font-size: 11px;
+}
+
+div svg {
+    overflow: visible;
+}
+
+#graph {
+    padding-left: 20px;
+    z-index: 6;
+}
+
+path.data-line {
+    stroke-width: 4;
+    fill: none;
+}
+
+path.route-line {
+    stroke-width: 2;
+    fill: none;
+}

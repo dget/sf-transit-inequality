@@ -68,7 +68,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
 
         // dimensions
         var w = 580,
-            h = 260,
+            h = 460,
             hMargin = 65,
             vMargin = 20,
             dotRadius = 3,
