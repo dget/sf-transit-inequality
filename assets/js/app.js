@@ -65,21 +65,13 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             return agencyData[agencyName].stops[stop_id];
         });
 
-        // find the color to use to draw this route in the graph and the map
-        console.log("params = %o", params);
-        if(params && params["color_override"]){
-            routeColor = params["color_override"];
-        }else{
-            routeColor = agencyData[agencyName].routes[routeId].color;
-        }
-        if (routeColor === undefined) routeColor = "#666";
-
         // dimensions
         var w = 580,
             h = 260,
             hMargin = 65,
             vMargin = 20,
             dotRadius = 5,
+            colors = ['#1F3A93', '#D91E18', '#26A65B'],
             years = Object.keys(stops[0].median_income),
             numberOfYears = years.length,
             moneyFormat = d3.format(","),
@@ -162,7 +154,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             .attr("class", "data-line")
             .transition()
             .attr("d", line(stops))
-            .style("stroke", routeColor);
+            .style("stroke", colors[yearIndex]);
         }
 
 
@@ -174,7 +166,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             circles.data(stops)
             .enter()
             .append("circle")
-            .attr("fill", routeColor)
+            .attr("fill", colors[yearIndex])
             .attr("stroke", "white")
             .attr("data-year", years[yearIndex])
             .attr('data-stop-id', function(d, i) {return i;})
@@ -205,7 +197,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
           circle = map_svg.append("circle")
             .attr("class", "stop-marker")
             .attr("r", 4)
-            .attr("fill",routeColor)
+            .attr("fill",colors[0])
             .attr("cx",marker_coords[0])
             .attr("cy",marker_coords[1]);
         })
@@ -228,7 +220,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         map_svg.select("path.route-line")
         .transition()
         .attr("d", route_line(positions))
-        .attr("stroke", routeColor);
+        .attr("stroke", colors[0]);
 
     };
 }]);
