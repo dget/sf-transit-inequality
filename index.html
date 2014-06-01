@@ -22,10 +22,7 @@
         <div class="page-header">
             <h1>Changes in Bay Area Income <small>1990–2010 </small></h1>
         </div>
-        <p><span class="help-block">Choose a transit line, and see how median income has changed over the years at each stop.</span>
-            
-    
-   
+        <span class="help-block">Choose a transit line, and see how median income has changed over the years at each stop.</span>
         
            <div data-ng-show="agencies"><div class="agency-container">
             <div class="btn-group">
@@ -68,31 +65,11 @@
         </div></div>
         </p>
     
-    
-        <!--<form role="form">
-            <span class="help-block">Choose a line, and see how median income has changed over the years at each stop.</span>
-            <select class="form-control input-lg">
-                <optgroup label="BART" data-ng-click="displayRoute('BART', routeId)">
-                    <option data-ng-repeat="(routeId, route) in agencies['BART'].routes">
-                        {{route.name}}
-                    </option>
-                </optgroup>
-                <optgroup label="MUNI">
-                    <option data-ng-repeat="(routeId, route) in (agencies['MUNI'].routes | orderBy:'name')"  data-ng-click="displayRoute('MUNI', routeId)" data-ng-hide="route.important">
-                        {{route.name}}
-                    </option>
-                </optgroup>
-                <optgroup label="Caltrain">
-                    <option>Local</option>
-                    <option>Limited</option>
-                    <option>Bullet</option>
-                </optgroup>
-            </select>
-        </form>-->
-        <h2>Key</h2>
-        <div id="graph" class="well">
-          <div id="instructions"><p></p></div>
+        <h2>Key <span class="key routeColor1">1990</span> <span class="key routeColor2">2000</span> <span class="key routeColor3">2010</span></h2>
+        <div id="graph">
+          <div id="instructions"><p>Graph Placeholder</p></div>
         </div>
+        
         <h2>About</h2>
         <p>Source: US Census 1990, 2000, 2010. Adjusted for inflation using this formula for Consumer Price Index: 2014 Wages = 2000 Wages x (2014 CPI-U / 2000 CPI-U).</p>
         <p>Created by <a href="https://twitter.com/theLemonZest">@thelemonzest</a>, <a href="https://twitter.com/dget">@dget</a>, and <a href="https://twitter.com/eddie_ruvalcaba">@eddie_ruvalcaba</a> for the San Francisco <a href="http://codeforamerica.org/brigade/">Code for America Brigade</a>.</p>
