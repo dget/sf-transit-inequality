@@ -8,11 +8,18 @@ ALL_GTFS_PATHS = {"BART": SCRIPT_DIR+"/../data/bart",
 			 	 "MUNI": SCRIPT_DIR+"/../data/muni"
          }
 
+FIPS_JSON_FILE = {
+    "BART": SCRIPT_DIR + "/../output/BART_FIPS.json",
+    "CalTrain": SCRIPT_DIR + "/../output/CalTrain_FIPS.json",
+    "MUNI": SCRIPT_DIR + "/../output/MUNI_FIPS.json"
+}
+
 # Census
 CENSUS_API_KEY = "4b415bf262765d14f4c2f534ce3b5f0a4237d980"
 MEDIAN_INCOME_TABLE_NAMES = {
   "2010": 'B19013_001E',
-  "2000": 'P053001'
+  "2000": 'P053001',
+  "1990": 'P080A001'
 }
 
 # Skip some MUNI bus routes
