@@ -70,11 +70,11 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             h = 260,
             hMargin = 65,
             vMargin = 20,
-            dotRadius = 5,
+            dotRadius = 3,
             colors = ['#1F3A93', '#D91E18', '#26A65B'],
             years = Object.keys(stops[0].median_income),
             numberOfYears = years.length,
-            moneyFormat = d3.format(","),
+            moneyFormat = d3.format(",.2f"),
             yScale = d3.scale.linear().domain([200000, 0]).range([10, h - vMargin]),
             xScale = d3.scale.linear().domain([0, stops.length]).range([hMargin, w - hMargin]),
             xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(stops.length).tickFormat(function(d, i) {
@@ -182,21 +182,27 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
               fipsInfo = stop.fips_info[year];
 
           tooltip.html(function() {
-            return "<strong>" + stop.name + "</strong><br/>" +
-            "Median income: $" + moneyFormat(stop.median_income[year]) + "<br/>" +
-            "Census Tract: " + fipsInfo.state_fips + fipsInfo.county_fips + fipsInfo.tract_fips;
+            tooltip_html = "<strong>" + stop.name + "</strong><br/>";
+            tooltip_html += "Median income: <br/>";
+            for (var year in stop.median_income) {
+                if(stop.median_income.hasOwnProperty(year)) {
+                    tooltip_html += "<strong>" + year + ":</strong> $" + moneyFormat(stop.median_income[year]) + "<br/>";
+                }
+            }
+            tooltip_html += "Census Tract: " + fipsInfo.state_fips + fipsInfo.county_fips + fipsInfo.tract_fips;
+            return tooltip_html;
           })
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY) + "px");
 
           tooltip.style("visibility", "visible");
-          this.setAttribute("r", 10);
+          this.setAttribute("r", 7);
 
           marker_coords = $scope.map_projection([stop.lon, stop.lat]);
           map_svg.select("circle.stop-marker").remove();
           circle = map_svg.append("circle")
             .attr("class", "stop-marker")
-            .attr("r", 4)
+            .attr("r", 3)
             .attr("fill",colors[0])
             .attr("cx",marker_coords[0])
             .attr("cy",marker_coords[1]);
