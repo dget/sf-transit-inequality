@@ -150,7 +150,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             .y(function(d, i) { return yScale(d.median_income[years[yearIndex]]);});
 
           // Append the line to the graph
-          svg.append("path")
+          svg.insert("path", 'g.data-dots' )
             .attr("class", "data-line")
             .transition()
             .attr("d", line(stops))
