@@ -76,19 +76,21 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
 
         // dimensions
         var w = 580,
-        h = 260,
-        hMargin = 65,
-        vMargin = 20,
-        dotRadius = 5,
-        moneyFormat = d3.format(",");
-        yScale = d3.scale.linear().domain([200000, 0]).range([10, h - vMargin]);
-        xScale = d3.scale.linear().domain([0, stops.length]).range([hMargin, w - hMargin]);
-        xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(stops.length).tickFormat(function(d, i) {
-            if (stops[i]) {
+            h = 260,
+            hMargin = 65,
+            vMargin = 20,
+            dotRadius = 5,
+            years = Object.keys(stops[0].median_income),
+            numberOfYears = years.length,
+            moneyFormat = d3.format(","),
+            yScale = d3.scale.linear().domain([200000, 0]).range([10, h - vMargin]),
+            xScale = d3.scale.linear().domain([0, stops.length]).range([hMargin, w - hMargin]),
+            xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(stops.length).tickFormat(function(d, i) {
+              if (stops[i]) {
                 return stops[i].name;
-            }
-        });
-        yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8).tickFormat(function(d, i) {return "$" + d / 1000 + "K";});
+              }
+            }),
+            yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8).tickFormat(function(d, i) {return "$" + d / 1000 + "K";});
 
         // Initial setup
         if(!$scope.didSetUpGraph){
@@ -102,7 +104,6 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             .attr("height", h + 100);
 
             graph_container.append("div").attr("id","tooltip"); // Hovering tooltip
-            svg.append("svg:path").attr("class", "data-line"); // Graph line
             svg.append("g").attr("class","data-dots"); // Graph dots
 
             svg.append("text")
@@ -117,7 +118,6 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         var svg = d3.select("#graph").selectAll("svg");
         var heading = d3.select("#graph").selectAll("h3");
         var tooltip = d3.selectAll("div#tooltip");
-        var data_path = d3.selectAll("path.data-line");
         var data_dots_group = d3.selectAll("g.data-dots");
         var map_svg = d3.select("#map svg");
 
@@ -146,45 +146,63 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         .call(yAxis);
 
         // Data line
-        var line = d3.svg.line()
-        .interpolate("cardinal")
-        .x(function(d, i) { return xScale(i);})
-        .y(function(d, i) { return yScale(d.median_income);});
+        var yearIndex = 0;
+        // Delete the lines from the previous graph
+        svg.selectAll("path.data-line").remove();
+        // Loop through every year
+        for(yearIndex = 0; yearIndex < numberOfYears; yearIndex++) {
+          // Create the line
+          var line = d3.svg.line()
+            .interpolate("cardinal")
+            .x(function(d, i) { return xScale(i);})
+            .y(function(d, i) { return yScale(d.median_income[years[yearIndex]]);});
 
-        data_path.transition()
-        .attr("d",line(stops))
-        .attr("stroke", routeColor);
+          // Append the line to the graph
+          svg.append("path")
+            .attr("class", "data-line")
+            .transition()
+            .attr("d", line(stops))
+            .style("stroke", routeColor);
+        }
+
 
         // Dots for stops
         data_dots_group.selectAll("circle").remove();
-        new_dots = data_dots_group.selectAll("circle")
-        .data(stops)
-        .enter()
-        .append("circle")
-        .attr("fill", routeColor)
-        .attr("stroke", "white")
-        .transition()
-        .attr("cx", function(d, i) {return xScale(i);})
-        .attr("cy", function(d, i) {return yScale(d.median_income);})
-        .attr("r", dotRadius);
+        var circles = data_dots_group.selectAll("circle");
+        // Create the dots for each stop in each year
+        for(yearIndex = 0; yearIndex < numberOfYears; yearIndex++) {
+            circles.data(stops)
+            .enter()
+            .append("circle")
+            .attr("fill", routeColor)
+            .attr("stroke", "white")
+            .attr("data-year", years[yearIndex])
+            .attr('data-stop-id', function(d, i) {return i;})
+            .transition()
+            .attr("cx", function(d, i) {return xScale(i);})
+            .attr("cy", function(d, i) {return yScale(d.median_income[years[yearIndex]]);})
+            .attr("r", dotRadius);
+        }
 
         data_dots_group.selectAll("circle").on("mouseover", function(d, i) {
-            stop = stops[i];
-            tooltip.html(function() {
-                return "<strong>" + stops[i].name + "</strong><br/>" +
-                "Median income: $" + moneyFormat(stop.median_income) + "<br/>" +
-                "Census Tract: " + stop.state_fips + stop.county_fips + stop.tract_fips;
-            })
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY) + "px");
+          var stop = stops[this.getAttribute('data-stop-id')],
+              year = this.getAttribute('data-year'),
+              fipsInfo = stop.fips_info[year];
 
-            tooltip.style("visibility", "visible");
-            this.setAttribute("r", 10);
+          tooltip.html(function() {
+            return "<strong>" + stop.name + "</strong><br/>" +
+            "Median income: $" + moneyFormat(stop.median_income[year]) + "<br/>" +
+            "Census Tract: " + fipsInfo.state_fips + fipsInfo.county_fips + fipsInfo.tract_fips;
+          })
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY) + "px");
 
-            // show a map marker
-            marker_coords = $scope.map_projection([stop.lon, stop.lat]);
-            map_svg.select("circle.stop-marker").remove();
-            circle = map_svg.append("circle")
+          tooltip.style("visibility", "visible");
+          this.setAttribute("r", 10);
+
+          marker_coords = $scope.map_projection([stop.lon, stop.lat]);
+          map_svg.select("circle.stop-marker").remove();
+          circle = map_svg.append("circle")
             .attr("class", "stop-marker")
             .attr("r", 4)
             .attr("fill",routeColor)
