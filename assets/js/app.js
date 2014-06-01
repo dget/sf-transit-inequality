@@ -71,7 +71,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             hMargin = 65,
             vMargin = 20,
             dotRadius = 3,
-            colors = ['#1F3A93', '#D91E18', '#26A65B'],
+            colors = ['#1fbba6', '#ff7f66', '#8560a8'],
             years = Object.keys(stops[0].median_income),
             numberOfYears = years.length,
             moneyFormat = d3.format(",.2f"),
