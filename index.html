@@ -21,13 +21,15 @@
     <div class="container" data-ng-controller="AppCtrl" data-ng-init="init()">
         <div class="page-header">
             <h1>Changes in Bay Area Income <small>1990–2010 </small></h1>
+            <p>Choose a transit line, and see how median income has changed over the years at each stop.</p>
         </div>
-        <span class="help-block">Choose a transit line, and see how median income has changed over the years at each stop.</span>
         
-           <div data-ng-show="agencies"><div class="agency-container">
+        <div class="row">
+            <div class="col-md-2">
+           <div data-ng-show="agencies"><div class="agency-container margint">
             <div class="btn-group">
             <button type="button" class="btn btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Choose Transit Line <span class="caret"></span>
+                Change Transit Line <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li>BART</li>
@@ -46,26 +48,30 @@
                 </li>
                 <li>Caltrain</li>
                 <li>
-                        <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_local_20121001')">
-                        <span class="swatch" style="background-color: white"></span> 
-                        Local</a>
-                    </li>
-                    <li>
-                        <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_limited_20121001')">
-                        <span class="swatch" style="background-color: yellow"></span> 
-                        Limited</a>
-                    </li>
-                    <li>
-                        <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_bullet_20121001')">
-                        <span class="swatch" style="background-color: red"></span> 
-                        Bullet</a>
+                    <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_local_20121001')">
+                    <span class="swatch" style="background-color: white"></span> 
+                    Local</a>
+                </li>
+                <li>
+                    <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_limited_20121001')">
+                    <span class="swatch" style="background-color: yellow"></span> 
+                    Limited</a>
+                </li>
+                <li>
+                    <a href="#" data-ng-click="displayRoute('CalTrain', 'ct_bullet_20121001')">
+                    <span class="swatch" style="background-color: red"></span> 
+                    Bullet</a>
                 </li>
             </ul>
+            </div>
         </div>
-        </div></div>
+        </div>
+        </div>
+            <div class="col-md-5">
+        <h2>Key <span class="key routeColor1">1990</span> <span class="key routeColor2">2000</span> <span class="key routeColor3">2010</span></h2></div>
+        </div>
         </p>
     
-        <h2>Key <span class="key routeColor1">1990</span> <span class="key routeColor2">2000</span> <span class="key routeColor3">2010</span></h2>
         <div id="graph">
           <div id="instructions"><p>Graph Placeholder</p></div>
         </div>

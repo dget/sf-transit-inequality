@@ -11,12 +11,14 @@ h2 {margin-top: 30px; font-size:16px;}
 a {color: #1fbba6;}
 a:hover, a:focus {color: #178778;}
 
-.page-header {border-bottom: none;}
+.page-header {border-bottom: none; margin-bottom: 0;}
 
 .btn-primary {background-color: #1fbba6;border-color: #1ba18f;}
 
 .key {border-left: 20px solid; margin-left: 20px; padding-left: 10px; font-size: 14px; color: #555;}
 .routeColor1 {border-color:#1fbba6;} .routeColor2 {border-color:#ff7f66;} .routeColor3 {border-color:#8560a8;}
+
+.margint {margin-top:20px;}
 
 #tooltip {
     border: #ccc 1px solid;
@@ -30,9 +32,7 @@ a:hover, a:focus {color: #178778;}
     font-size: 11px;
 }
 
-div svg {
-    overflow: visible;
-}
+div svg {overflow: visible;}
 
 #graph {
   z-index: 6;
@@ -48,7 +48,6 @@ path.route-line {
     stroke-width: 2;
     fill: none;
 }
-
 
 .axis line, .axis path {
     fill: none;
