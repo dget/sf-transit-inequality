@@ -65,24 +65,16 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             return agencyData[agencyName].stops[stop_id];
         });
 
-        // find the color to use to draw this route in the graph and the map
-        console.log("params = %o", params);
-        if(params && params["color_override"]){
-            routeColor = params["color_override"];
-        }else{
-            routeColor = agencyData[agencyName].routes[routeId].color;
-        }
-        if (routeColor === undefined) routeColor = "#666";
-
         // dimensions
         var w = 580,
             h = 260,
             hMargin = 65,
             vMargin = 20,
-            dotRadius = 5,
+            dotRadius = 3,
+            colors = ['#1F3A93', '#D91E18', '#26A65B'],
             years = Object.keys(stops[0].median_income),
             numberOfYears = years.length,
-            moneyFormat = d3.format(","),
+            moneyFormat = d3.format(",.2f"),
             yScale = d3.scale.linear().domain([200000, 0]).range([10, h - vMargin]),
             xScale = d3.scale.linear().domain([0, stops.length]).range([hMargin, w - hMargin]),
             xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(stops.length).tickFormat(function(d, i) {
@@ -158,11 +150,11 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             .y(function(d, i) { return yScale(d.median_income[years[yearIndex]]);});
 
           // Append the line to the graph
-          svg.append("path")
+          svg.insert("path", 'g.data-dots' )
             .attr("class", "data-line")
             .transition()
             .attr("d", line(stops))
-            .style("stroke", routeColor);
+            .style("stroke", colors[yearIndex]);
         }
 
 
@@ -174,7 +166,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
             circles.data(stops)
             .enter()
             .append("circle")
-            .attr("fill", routeColor)
+            .attr("fill", colors[yearIndex])
             .attr("stroke", "white")
             .attr("data-year", years[yearIndex])
             .attr('data-stop-id', function(d, i) {return i;})
@@ -190,22 +182,28 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
               fipsInfo = stop.fips_info[year];
 
           tooltip.html(function() {
-            return "<strong>" + stop.name + "</strong><br/>" +
-            "Median income: $" + moneyFormat(stop.median_income[year]) + "<br/>" +
-            "Census Tract: " + fipsInfo.state_fips + fipsInfo.county_fips + fipsInfo.tract_fips;
+            tooltip_html = "<strong>" + stop.name + "</strong><br/>";
+            tooltip_html += "Median income: <br/>";
+            for (var year in stop.median_income) {
+                if(stop.median_income.hasOwnProperty(year)) {
+                    tooltip_html += "<strong>" + year + ":</strong> $" + moneyFormat(stop.median_income[year]) + "<br/>";
+                }
+            }
+            tooltip_html += "Census Tract: " + fipsInfo.state_fips + fipsInfo.county_fips + fipsInfo.tract_fips;
+            return tooltip_html;
           })
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY) + "px");
 
           tooltip.style("visibility", "visible");
-          this.setAttribute("r", 10);
+          this.setAttribute("r", 7);
 
           marker_coords = $scope.map_projection([stop.lon, stop.lat]);
           map_svg.select("circle.stop-marker").remove();
           circle = map_svg.append("circle")
             .attr("class", "stop-marker")
-            .attr("r", 4)
-            .attr("fill",routeColor)
+            .attr("r", 3)
+            .attr("fill",colors[0])
             .attr("cx",marker_coords[0])
             .attr("cy",marker_coords[1]);
         })
@@ -228,7 +226,7 @@ angular.module('app').controller('AppCtrl', ['$scope', 'DATA_SOURCES', function(
         map_svg.select("path.route-line")
         .transition()
         .attr("d", route_line(positions))
-        .attr("stroke", routeColor);
+        .attr("stroke", colors[0]);
 
     };
 }]);
