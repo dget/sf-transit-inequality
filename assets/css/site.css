@@ -34,7 +34,10 @@ div svg {
     overflow: visible;
 }
 
-#graph {z-index: 6;}
+#graph {
+  z-index: 6;
+  overflow-y: scroll;
+}
 
 path.data-line {
     stroke-width: 4;
