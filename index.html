@@ -33,18 +33,18 @@
                 Choose Transit Line <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li>MUNI</li>
-                <li data-ng-repeat="(routeId, route) in (agencies['MUNI'].routes | orderBy:'name')">
-                    <a href="#" data-ng-click="displayRoute('MUNI', routeId)" data-ng-hide="route.important">
-                      {{route.name}}
-                    </a>
-                </li>
-                <li class="divider"></li>
                 <li>BART</li>
                 <li data-ng-repeat="(routeId, route) in agencies['BART'].routes">
                     <a href="#" data-ng-click="displayRoute('BART', routeId)">
                     <span class="swatch" data-ng-style="{'background-color': route.color}"></span>
                     {{route.name}}
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>MUNI</li>
+                <li data-ng-repeat="(routeId, route) in (agencies['MUNI'].routes | orderBy:'name')">
+                    <a href="#" data-ng-click="displayRoute('MUNI', routeId)" data-ng-hide="route.important">
+                      {{route.name}}
                     </a>
                 </li>
                 <li>Caltrain</li>
@@ -66,7 +66,7 @@
             </ul>
         </div>
         </div></div>
-        MUNI N Judah</p>
+        </p>
     
     
         <!--<form role="form">

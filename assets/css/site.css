@@ -48,3 +48,15 @@ path.route-line {
     stroke-width: 2;
     fill: none;
 }
+
+
+.axis line, .axis path {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: Helvetica, sans-serif;
+    font-size: 9px;
+}
