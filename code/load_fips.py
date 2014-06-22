@@ -17,6 +17,14 @@ for stop_name in stops_json['stops']:
     stop = stops_json['stops'][stop_name]
     print stop
     print stop['lat'], stop['lon']
+    
+    if 'Metro Montgomery' in stop_name:
+        stop['lat'] = 37.789256 
+        stop['lon'] = -122.401407
+
+    if 'Metro Powell' in stop_name:
+        stop['lat'] = 37.784991
+        stop['lon'] = -122.406857
 
     params = {
         'apiKey': '4a737e73be544cf19303111386227ee9',
