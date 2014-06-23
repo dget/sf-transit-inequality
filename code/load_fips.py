@@ -10,19 +10,16 @@ in_f = open(INPUT_FILE)
 stops_json = json.load(in_f)
 in_f.close()
 
-print stops_json
+#print stops_json
 fips_db = {}
 
 for stop_name in stops_json['stops']:
     stop = stops_json['stops'][stop_name]
-    print stop
-    print stop['lat'], stop['lon']
     
-    if 'Metro Montgomery' in stop_name:
+    if 'Metro Montgomery' in stop['name']:
         stop['lat'] = 37.789256 
         stop['lon'] = -122.401407
-
-    if 'Metro Powell' in stop_name:
+    elif 'Metro Powell' in stop['name']:
         stop['lat'] = 37.784991
         stop['lon'] = -122.406857
 
@@ -55,10 +52,10 @@ for stop_name in stops_json['stops']:
             'tract_fips': ''.join([x for x in record['CensusTract'] if x != '.'])
         }
 
-    print fips_json, stop
+    #print fips_json, stop
     fips_db[stop['name']] = fips_json
 
-    print fips_db
+    #print fips_db
     out_f = open(OUTPUT_FILE, "w")
     json.dump(fips_db, out_f)
     out_f.close()
